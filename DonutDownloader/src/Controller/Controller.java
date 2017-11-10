@@ -2,6 +2,7 @@ package Controller;
 
 import Model.Model;
 import View.View;
+import Model.Initialization;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
@@ -11,7 +12,10 @@ import javafx.scene.input.KeyEvent;
 public class Controller {
     private Model model;
     private View view;
+    public Controller(){
 
+        //link(model,view);
+    }
     public Model getModel(){
         return this.model;
     }
@@ -21,22 +25,13 @@ public class Controller {
     public void link(Model model, View view) {
         this.model = model;
         this.view = view;
-        /*TODO Übertragen des True links auf den tatsächlichen link und die Login Funktion in einen eigene Threadklasse. Und
+        /*TODO Übertragen des True links auf den tatsächlichen link und die Initialization Funktion in einen eigene Threadklasse. Und
         * am besten einen CORRECT INVALID Text Feld.   TextHovering Farbe ändern */
-        this.view.send.setOnAction(event -> {
-            boolean canLogIn = model.checkLogin(view.loginField.getText(),view.passwordField.getText());
-            System.out.println(canLogIn);
-            if(canLogIn){
-                view.loginStage.close();
-                view.dialog.show();
-                view.setVisible(true);
-                trueLink();
-            }
-            else System.out.println("LOGGING FAILED");
-        });
-    }
-    public void trueLink(){
+
+        //CHECK LOGIN AND UPDATE
+        new Initialization(getModel(),getView()).createInstance();
         try {
+
             //UPDATE
             new UpdaterClass(getModel(), getView());
             this.view.paste.setOnAction(e -> this.model.ctrlv(this.view.insertUrl));
@@ -77,6 +72,7 @@ public class Controller {
                 model.showWhatsNew(view);
             }
         });
+
     }
 }
 class UpdaterClass extends Thread{

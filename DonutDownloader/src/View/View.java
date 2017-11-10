@@ -28,12 +28,12 @@ public class View extends BorderPane{
     public Stage loginStage,dialogStage,whatsNewStage;
     public View(){
 
-        //Login System
+        //Initialization System
         login = new Alert(Alert.AlertType.NONE);
-        login.setHeaderText("\t       Login");
+        login.setHeaderText("\t       Initialization");
         login.setWidth(500);
         login.setHeight(450);
-        login.setTitle("Login");
+        login.setTitle("Initialization");
 
         loginStage = (Stage) login.getDialogPane().getScene().getWindow();
 
