@@ -3,14 +3,11 @@ package MP3;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.*;
-import javafx.beans.property.SimpleStringProperty;
 import org.apache.commons.logging.LogFactory;
 import java.io.*;
 import java.util.Random;
 import java.util.function.Supplier;
 import java.util.logging.Level;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class MP3 implements Supplier<String> {
     private String urlYoutube,path,name;
