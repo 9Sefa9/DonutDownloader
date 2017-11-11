@@ -3,7 +3,6 @@ package Controller;
 import Model.Model;
 import View.View;
 import Model.Initialization;
-import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -12,10 +11,7 @@ import javafx.scene.input.KeyEvent;
 public class Controller {
     private Model model;
     private View view;
-    public Controller(){
 
-        //link(model,view);
-    }
     public Model getModel(){
         return this.model;
     }
@@ -25,11 +21,10 @@ public class Controller {
     public void link(Model model, View view) {
         this.model = model;
         this.view = view;
-        /*TODO Übertragen des True links auf den tatsächlichen link und die Initialization Funktion in einen eigene Threadklasse. Und
-        * am besten einen CORRECT INVALID Text Feld.   TextHovering Farbe ändern */
 
         //LOGIN AND UPDATE
         new Initialization(getModel(),getView()).createInstance();
+        //NORMAL LINK METHOD
         try {
             this.view.paste.setOnAction(e -> this.model.ctrlv(this.view.insertUrl));
             this.view.convert.setOnAction(e -> this.model.setUrlToList(this.view.insertUrl.getText(), this.view.listViewConvertList));

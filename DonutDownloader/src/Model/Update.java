@@ -2,7 +2,6 @@ package Model;
 
 import View.View;
 import javafx.application.Platform;
-import javafx.scene.paint.Color;
 
 public class Update {
     private Model model;
