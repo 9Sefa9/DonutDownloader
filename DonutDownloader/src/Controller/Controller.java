@@ -28,12 +28,9 @@ public class Controller {
         /*TODO Übertragen des True links auf den tatsächlichen link und die Initialization Funktion in einen eigene Threadklasse. Und
         * am besten einen CORRECT INVALID Text Feld.   TextHovering Farbe ändern */
 
-        //CHECK LOGIN AND UPDATE
+        //LOGIN AND UPDATE
         new Initialization(getModel(),getView()).createInstance();
         try {
-
-            //UPDATE
-            new UpdaterClass(getModel(), getView());
             this.view.paste.setOnAction(e -> this.model.ctrlv(this.view.insertUrl));
             this.view.convert.setOnAction(e -> this.model.setUrlToList(this.view.insertUrl.getText(), this.view.listViewConvertList));
             this.view.download.setOnAction(e -> this.model.savePath());
@@ -76,32 +73,6 @@ public class Controller {
     }
 }
 class UpdaterClass extends Thread{
-    Model model;
-    View view;
-    public UpdaterClass(Model model, View view){
-        this.view = view;
-        this.model = model;
-        run();
-    }
-    public void run() {
-        try {
-            if (this.model.hasUpdate()) {
-
-                this.view.midframe.setVisible(false);
-                this.view.upperframe.setVisible(false);
-                this.view.rightframe.setVisible(false);
-                this.view.downframe.setVisible(false);
-
-                this.view.dialog.show();
-                this.model.processUpdate();
-
-            } else Platform.runLater(() -> this.view.dialog.close());
-
-        } catch (Exception e) {
-            System.out.println("CONNECTION REFUSED!");
-            e.printStackTrace();
-        }
-    }
 
 }
 

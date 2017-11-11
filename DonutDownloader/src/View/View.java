@@ -6,6 +6,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -17,8 +18,7 @@ public class View extends BorderPane{
     public Button addsongs,deletesong,download, whatsNew, send;
     public GridPane upperframe,downframe,rightframe,midframe,loginPane;
     public TextField title;
-    public Text titleText;
-    public Text titleForConvertList,titleForDownloadList;
+    public Text titleText,titleForConvertList,titleForDownloadList,info;
     public TextField insertUrl,loginField;
     public PasswordField passwordField;
     public Button paste,convert;
@@ -30,10 +30,10 @@ public class View extends BorderPane{
 
         //Initialization System
         login = new Alert(Alert.AlertType.NONE);
-        login.setHeaderText("\t       Initialization");
+        login.setHeaderText("\t       Login");
         login.setWidth(500);
         login.setHeight(450);
-        login.setTitle("Initialization");
+        login.setTitle("Login");
 
         loginStage = (Stage) login.getDialogPane().getScene().getWindow();
 
@@ -45,11 +45,15 @@ public class View extends BorderPane{
 
         send = new Button("Send");
 
+        info = new Text();
+        info.setFill(Color.RED);
+
         loginPane = new GridPane();
         loginPane.setVgap(2);
         loginPane.add(loginField,5,0);
         loginPane.add(passwordField,5,10);
         loginPane.add(send,5,20);
+        loginPane.add(info,6,20);
         login.getDialogPane().contentProperty().set(loginPane);
         loginStage.setOnCloseRequest(e ->Platform.exit());
         loginStage.setAlwaysOnTop(true);
