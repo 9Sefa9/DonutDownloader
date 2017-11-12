@@ -33,7 +33,6 @@ public class View extends BorderPane{
         login.setTitle("Login");
 
         loginStage = (Stage) login.getDialogPane().getScene().getWindow();
-
         loginField = new TextField();
         loginField.setPromptText("Username...");
 
