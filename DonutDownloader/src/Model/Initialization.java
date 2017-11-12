@@ -34,8 +34,15 @@ public class Initialization {
                 new Update(model, view);
             }
             else {
+                if(!model.isConnectedToLoginServer()){
+                    //löscht alle elemente bis auf die anzeige, dass es keine Server gibt.
+                    view.loginPane.getChildren().remove(0,3);
+                    view.info.setText("SERVER OFFLINE! \nPlease contact the developer \nof this Application!");
+                    view.info.setFill(Color.DARKRED);
+                }else {
                     view.info.setText("LOGIN\nFAILED");
                     view.info.setFill(Color.LIGHTCORAL);
+                }
             }
         });
     }
