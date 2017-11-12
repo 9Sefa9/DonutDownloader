@@ -29,6 +29,7 @@ public class Initialization {
                 view.setVisible(true);
                 view.loginStage.close();
 
+                //TODO Raspberry PI , LoginServer Funktioniert aufgrund eines Bugs nicht!
                 //UPDATE
                 new Update(model, view);
             }
