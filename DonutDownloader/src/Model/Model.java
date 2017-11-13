@@ -11,6 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
+import java.awt.*;
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -20,7 +21,7 @@ import java.nio.file.Paths;
 import java.util.concurrent.*;
 
 public class Model {
-    public static int ID = 16;
+    public static int ID = 17;
     public Socket client = null;
     public DirectoryChooser dirChooser;
     public File fileSave;
@@ -185,7 +186,7 @@ public class Model {
 
     //retrieve lastVersion and download it.
     public void processUpdate() {
-        new UpdateClass(this.disFromServer, this.dosFromLocal).start();
+        new UpdateClass(this.disFromServer, this.dosFromLocal,currentLocation).start();
     }
 
     public void showWhatsNew(View view) {
@@ -341,9 +342,11 @@ class UpdateClass extends Thread{
 
     private DataOutputStream dosFromLocal;
     private DataInputStream disFromServer;
-    public UpdateClass(DataInputStream disServer,DataOutputStream dosLocal){
+    private String choosenPath;
+    public UpdateClass(DataInputStream disServer,DataOutputStream dosLocal,String choosenPath){
         this.disFromServer= disServer;
         this.dosFromLocal = dosLocal;
+        this.choosenPath = choosenPath;
     }
 
     @Override
@@ -366,6 +369,8 @@ class UpdateClass extends Thread{
                 dosFromLocal.write(buffer,0,temp);
             }
             System.out.println("DONE!\n\n");
+            //Start new downloaded program
+            Desktop.getDesktop().open(new File(this.choosenPath));
             //Exit the Current program and kill every running Thread.
             final ExecutorService exec = Executors.newCachedThreadPool();
             exec.shutdown();

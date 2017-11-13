@@ -67,7 +67,5 @@ public class Controller {
 
     }
 }
-class UpdaterClass extends Thread{
 
-}
 
