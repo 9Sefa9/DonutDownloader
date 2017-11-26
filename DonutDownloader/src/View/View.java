@@ -156,6 +156,7 @@ public class View extends BorderPane{
 
             rightframe.getColumnConstraints().add(new ColumnConstraints(125));
 
+
                 setRight(rightframe);
                 setBottom(downframe);
                 setTop(upperframe);

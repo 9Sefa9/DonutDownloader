@@ -10,20 +10,23 @@ import java.util.Random;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 
-public class MP3 implements Supplier<String>, Downloadable {
-    private String urlYoutube,path,name;
-    private WebClient webClient,webClient2;
-    private HtmlPage converterPage,amnesty;
+public class Playlist implements Supplier<String>, Downloadable {
+    private String urlYoutube,path,name,urlPlaylist;
+    private WebClient webClient;
+    private HtmlPage youtube;
 
-    public  MP3(String urlYoutube,String path){
+    public  Playlist(String urlYoutube,String path){
         this.urlYoutube = urlYoutube;
         this.path = path;
+        this.urlYoutube = urlYoutube;
         ignoreLogs();
 
         try {
+
             createWebsite();
             processYoutubeLink();
             downloadMp3FromServer();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -33,21 +36,13 @@ public class MP3 implements Supplier<String>, Downloadable {
     @Override
     public synchronized void createWebsite() throws Exception {
         try {
-            //convert2mp3
+            //Youtube Playlist link
             webClient = new WebClient(BrowserVersion.CHROME);
             webClient.getOptions().setThrowExceptionOnScriptError(false);
             webClient.getOptions().setCssEnabled(false);
             webClient.getOptions().setUseInsecureSSL(true);
             webClient.getOptions().setJavaScriptEnabled(true);
-            converterPage = webClient.getPage("http://convert2mp3.net/");
-
-            //amnesty
-            webClient2 = new WebClient(BrowserVersion.CHROME);
-            webClient2.getOptions().setThrowExceptionOnScriptError(false);
-            webClient2.getOptions().setCssEnabled(false);
-            webClient2.getOptions().setUseInsecureSSL(true);
-            webClient2.getOptions().setJavaScriptEnabled(true);
-            amnesty = webClient2.getPage("https://citizenevidence.amnestyusa.org/");
+            youtube = webClient.getPage(this.urlPlaylist);
 
         }catch(Exception e){
             e.printStackTrace();
@@ -57,12 +52,12 @@ public class MP3 implements Supplier<String>, Downloadable {
     public synchronized void processYoutubeLink() throws IOException, InterruptedException {
         try {
             this.name = null;
-            final HtmlForm form = converterPage.getFirstByXPath("//form[@action='index.php?p=convert']");
+            final HtmlForm form = youtube.getFirstByXPath("//form[@action='index.php?p=convert']");
             final HtmlTextInput urlField = form.getFirstByXPath("//input[@name='url']");
             final HtmlButton convertButton = form.getFirstByXPath("//button[@type='submit']");
-            System.out.println("Accessing Youtube link...");
+            System.out.println("Accessing Convert2Mp3...");
             urlField.setText(this.urlYoutube);
-            System.out.println("Converting to mp3...");
+            System.out.println("Converting...");
             System.out.println("Preparing mp3 file for download...");
             converterPage = convertButton.click();
 
@@ -96,12 +91,12 @@ public class MP3 implements Supplier<String>, Downloadable {
             int read;
             while((read = reader.read(buffer)) != -1){
                 os.write(buffer,0,read);
-           }
+            }
             System.out.println("Download done! Please check your path.");
 
 
         }catch (Exception i){
-                i.printStackTrace();
+            i.printStackTrace();
         }finally{
             try{
                 if(reader != null)
@@ -110,20 +105,20 @@ public class MP3 implements Supplier<String>, Downloadable {
                 if(os != null)
                     os.close();
 
-                }catch(Exception e){
-                    e.printStackTrace();
+            }catch(Exception e){
+                e.printStackTrace();
             }
         }
 
-        }
+    }
 
-        public synchronized String get(){
+    public synchronized String get(){
         return getTitle();
-        }
-        public synchronized String getTitle(){
+    }
+    public synchronized String getTitle(){
 
-            return this.name;
-        }
+        return this.name;
+    }
     @Override
     public void ignoreLogs() {
         LogFactory.getFactory().setAttribute("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.NoOpLog");
@@ -138,29 +133,29 @@ public class MP3 implements Supplier<String>, Downloadable {
     }
     @Override
     public synchronized void determineTitle(){
-            try {
+        try {
 
-                final HtmlTextInput inputfield = amnesty.getFirstByXPath("//input[@title='Enter YouTube URL']");
-                final HtmlInput input = amnesty.getFirstByXPath("//input[@value='Go']");
-                inputfield.setText(this.urlYoutube);
-                amnesty = input.click();
-                webClient2.waitForBackgroundJavaScript(2000);
-                HtmlAnchor title = amnesty.getAnchorByHref(this.urlYoutube);
-                this.name=title.getTextContent();
-                this.name = this.name.replaceAll("\\W+","");
-                System.out.println(name);
-            }catch(Exception e){
-                this.name = "NameNotParsed"+ new Random().nextInt(99999);
-                e.printStackTrace();
-            }finally{
-                try{
-                    if(webClient2 != null)
-                        webClient2.close();
-                    if(amnesty != null)
-                        amnesty = null;
-                }catch (Exception e){
+            final HtmlTextInput inputfield = amnesty.getFirstByXPath("//input[@title='Enter YouTube URL']");
+            final HtmlInput input = amnesty.getFirstByXPath("//input[@value='Go']");
+            inputfield.setText(this.urlYoutube);
+            amnesty = input.click();
+            webClient2.waitForBackgroundJavaScript(2000);
+            HtmlAnchor title = amnesty.getAnchorByHref(this.urlYoutube);
+            this.name=title.getTextContent();
+            this.name = this.name.replaceAll("\\W+","");
+            System.out.println(name);
+        }catch(Exception e){
+            this.name = "NameNotParsed"+ new Random().nextInt(99999);
+            e.printStackTrace();
+        }finally{
+            try{
+                if(webClient2 != null)
+                    webClient2.close();
+                if(amnesty != null)
+                    amnesty = null;
+            }catch (Exception e){
 
-                }
             }
         }
+    }
 }
