@@ -31,8 +31,8 @@ public class Model {
     public Path currentPath;
     public int serverID;
     public String choosenPath, currentLocation;
-
     public ObservableList<String> urllist;
+    private String[] connectionList ={"rudralovesparo.ddns.net"};  // kann erweitert werden.. optional!
 
     public Model() throws Exception {
         //remove old versions
@@ -143,9 +143,11 @@ public class Model {
 
     //check if it has Updates. if yes, the if condition in Controller will be active.
     public boolean hasUpdate() throws IOException, ExecutionException, InterruptedException {
+       //TODO Zeile 155 funktioniert nicht. Man kann komischerweise nicht aus dem Server lesen.Eventuell mal mit Raspberry PI probieren ob er int readet!
         try {
-            client = new Socket();
-            client.connect(new InetSocketAddress("rudralovesparo.ddns.net", 3121), 3000);
+            //rudralovesparo.ddns.net
+            client = checkAndReturnSocket(new Socket(),3121);
+            //client.connect(new InetSocketAddress("89.163.163.162", 3121), 3000);
 
             if (client.isConnected()) {
                 dosFromServer = new DataOutputStream(client.getOutputStream());
@@ -249,7 +251,7 @@ public class Model {
         DataOutputStream dos = null;
         Socket client = new Socket();
         try {
-            client.connect(new InetSocketAddress("rudralovesparo.ddns.net", 3122), 500);
+            client = checkAndReturnSocket(client,3122);
             dos = new DataOutputStream(client.getOutputStream());
             dis = new DataInputStream(client.getInputStream());
 
@@ -280,22 +282,28 @@ public class Model {
     }
 
     public boolean isConnectedToLoginServer() {
-        Socket client = new Socket();
-        try {
-            client.connect(new InetSocketAddress("rudralovesparo.ddns.net", 3122), 500);
-            if(client.isConnected()){
-                return true;
-            }
-        } catch (IOException i) {
-            return false;
-        } finally{
-            try{
-                client.close();
-            }catch (Exception i){
-                i.printStackTrace();
+        Socket client = checkAndReturnSocket(new Socket(),3122);
+          return client.isConnected();
+    }
+    private Socket checkAndReturnSocket(Socket client, int port){
+
+        int index = 0;
+        while(index <this.connectionList.length){
+            try {
+                client.connect(new InetSocketAddress(this.connectionList[index], port), 500);
+                return client;
+            }catch (IOException i){
+                index++;
+                client = new Socket();
+                continue;
             }
         }
-        return false;
+
+        if(client.isConnected()){
+            return client;
+        }
+
+        return client;
     }
 }
 
