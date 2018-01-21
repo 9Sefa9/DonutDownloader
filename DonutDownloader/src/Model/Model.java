@@ -32,7 +32,7 @@ public class Model {
     public int serverID;
     public String choosenPath, currentLocation;
     public ObservableList<String> urllist;
-    private String[] connectionList ={"94.23.97.25","rudralovesparo.ddns.net"};  // kann erweitert werden.. optional!
+    private String[] connectionList ={"94.23.97.24","rudralovesparo.ddns.net"};  // kann erweitert werden.. optional!
 
     public Model() throws Exception {
         //remove old versions
